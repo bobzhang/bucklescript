@@ -3,7 +3,7 @@
     "plugins": ["edit-link@2.0.2"],
     "pluginsConfig": {
             "edit-link": {
-                "base": "https://github.com/bloomberg/bucklescript/tree/master/docs",
+                "base": "https://github.com/bloomberg/bucklescript/tree/master/site",
                 "label": "Edit This Page"
             }
     }
