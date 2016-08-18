@@ -1,0 +1,615 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Help move runtime functions from OCaml to Javascript | Why JavaScript?</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="./Roadmap.html" />
+    
+    
+    <link rel="prev" href="./Dev-mode-How-to.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="6.2"
+        data-chapter-title="Help move runtime functions from OCaml to Javascript"
+        data-filepath="Help-move-runtime-functions-from-OCaml-to-Javascript.md"
+        data-basepath="."
+        data-revision="Thu Jul 07 2016 15:25:41 GMT-0400 (EDT)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Home
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" >
+            
+            <span><b>1.</b> Playground</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="Playground.html">
+            
+                
+                    <a href="./Playground.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        OCaml &amp; Reason Playgrounds
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" >
+            
+            <span><b>2.</b> Get Started</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="Installation.html">
+            
+                
+                    <a href="./Installation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Installation
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="Create-a-simple-example-with-NPM.html">
+            
+                
+                    <a href="./Create-a-simple-example-with-NPM.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Create a simple example with NPM
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="NPM-Support.html">
+            
+                
+                    <a href="./NPM-Support.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        NPM Support
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" >
+            
+            <span><b>3.</b> BuckleScript Basics</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1" data-path="FAQ.html">
+            
+                
+                    <a href="./FAQ.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.</b>
+                        
+                        FAQ
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" >
+            
+                
+                    <a target="_blank" href="https:/ocaml.org/">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.</b>
+                        
+                        About OCaml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="Compiler-options.html">
+            
+                
+                    <a href="./Compiler-options.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.</b>
+                        
+                        Compiler options
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="How-to-adapt-your-build-system.html">
+            
+                
+                    <a href="./How-to-adapt-your-build-system.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.4.</b>
+                        
+                        How to adapt your build system
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.5" data-path="Semantic-differences-from-other-backends.html">
+            
+                
+                    <a href="./Semantic-differences-from-other-backends.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.5.</b>
+                        
+                        Semantic differences from other backends
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.6" data-path="JavaScript-target-versions.html">
+            
+                
+                    <a href="./JavaScript-target-versions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.6.</b>
+                        
+                        JavaScript target versions
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="4" >
+            
+            <span><b>4.</b> BuckleScript Overview</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="4.1" data-path="Compiler-overview.html">
+            
+                
+                    <a href="./Compiler-overview.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.1.</b>
+                        
+                        Compiler overview
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="5" >
+            
+            <span><b>5.</b> BuckleScript FFI</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="5.1" data-path="Extensions.html">
+            
+                
+                    <a href="./Extensions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.1.</b>
+                        
+                        Language Extenions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.2" data-path="JS-call-OCaml.html">
+            
+                
+                    <a href="./JS-call-OCaml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.2.</b>
+                        
+                        JS call OCaml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.3" data-path="OCaml-call-JS.html">
+            
+                
+                    <a href="./OCaml-call-JS.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.3.</b>
+                        
+                        OCaml call JS
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.4" data-path="Runtime-representation.html">
+            
+                
+                    <a href="./Runtime-representation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.4.</b>
+                        
+                        Runtime representation
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.5" data-path="Experimental-support-of-typescript.html">
+            
+                
+                    <a href="./Experimental-support-of-typescript.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.5.</b>
+                        
+                        Experimental support of typescript
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5.6" data-path="Unsupported-IO-primitives.html">
+            
+                
+                    <a href="./Unsupported-IO-primitives.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.6.</b>
+                        
+                        Unsupported IO primitives
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="6" >
+            
+            <span><b>6.</b> Contributions</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="6.1" data-path="Dev-mode-How-to.html">
+            
+                
+                    <a href="./Dev-mode-How-to.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.1.</b>
+                        
+                        Dev mode How to
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="6.2" data-path="Help-move-runtime-functions-from-OCaml-to-Javascript.html">
+            
+                
+                    <a href="./Help-move-runtime-functions-from-OCaml-to-Javascript.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.2.</b>
+                        
+                        Help move runtime functions from OCaml to Javascript
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="7" >
+            
+            <span><b>7.</b> Roadmap</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="7.1" data-path="Roadmap.html">
+            
+                
+                    <a href="./Roadmap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.1.</b>
+                        
+                        Roadmap
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="8" >
+            
+            <span><b>8.</b> Comparisons</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="8.1" data-path="Differences-from-js_of_ocaml.html">
+            
+                
+                    <a href="./Differences-from-js_of_ocaml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.1.</b>
+                        
+                        Differences from js_of_ocaml
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Why JavaScript?</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <p>BuckleScript runtime implementation is currently a mix of OCaml and JavaScript. (jscomp/runtime directory). The JavaScript code is defined in the <code>.ml</code> file using the <code>bs.raw</code> syntax extension. </p>
+<p>The goal is to implement the runtime <strong>purely in OCaml</strong> and you can help contribute. </p>
+<p>Each new PR should include appropriate testing. </p>
+<p>Currently all tests are in <code>jscomp/test</code> directory and you should either add a new test file or modify an existing test which covers the part of the compiler you modified.</p>
+<ul>
+<li><p>Add the filename in <code>jscomp/test/test.mllib</code></p>
+</li>
+<li><p>Add a  suite test</p>
+<p> The specification is in <code>jscomp/test/mt.ml</code></p>
+<p> For example a simple tests would be like</p>
+<pre><code class="lang-ocaml"> <span class="hljs-keyword">let</span> suites : _ <span class="hljs-type">Mt</span>.pair_suites = <span class="hljs-type">Mt</span>.[
+     <span class="hljs-string">&quot;hey&quot;</span>, (<span class="hljs-keyword">fun</span> _ -&gt; <span class="hljs-type">Eq</span>(<span class="hljs-literal">true</span>, <span class="hljs-number">3</span> &gt; <span class="hljs-number">2</span>));
+     <span class="hljs-string">&quot;hi&quot;</span>, (<span class="hljs-keyword">fun</span> _ -&gt;  <span class="hljs-type">Neq</span>(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>);
+     <span class="hljs-string">&quot;hello&quot;</span>, (<span class="hljs-keyword">fun</span> _ -&gt; <span class="hljs-type">Approx</span>(<span class="hljs-number">3.0</span>, <span class="hljs-number">3.0</span>));
+     <span class="hljs-string">&quot;throw&quot;</span>, (<span class="hljs-keyword">fun</span> _ -&gt; <span class="hljs-type">ThrowAny</span>(<span class="hljs-keyword">fun</span> _ -&gt; raise <span class="hljs-number">3</span>)) 
+  ]
+ <span class="hljs-keyword">let</span> <span class="hljs-literal">()</span> = <span class="hljs-type">Mt</span>.from_pair_suites __FILE__ suites
+</code></pre>
+</li>
+<li><p>Run the test</p>
+<p> Suppose you have mocha installed, if not, try <code>npm install mocha</code></p>
+<pre><code> mocha -R list jscomp/test/your_test_file.js
+</code></pre></li>
+<li><p>See the coverage</p>
+<pre><code> npm run cover
+</code></pre></li>
+</ul>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./Dev-mode-How-to.html" class="navigation navigation-prev " aria-label="Previous page: Dev mode How to"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./Roadmap.html" class="navigation navigation-next " aria-label="Next page: Roadmap"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/bloomberg/bucklescript/tree/master/docs","label":"Edit This Page"},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>
