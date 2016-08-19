@@ -24,7 +24,7 @@ This part is similar to `traditional
 FFI <http://caml.inria.fr/pub/docs/manual-ocaml-4.02/intfc.html>`__,
 with syntax as described below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     external value-name :  typexpr =  external-declaration  attributes
     external-declaration :=  string-literal  
@@ -39,9 +39,9 @@ Attributes
 
 Example
 
-.. code:: ocaml
+.. code-block:: ocaml
 
-   external imul : int -> int -> int = "Math.imul" [@@bs.val]`` 
+   external imul : int -> int -> int = "Math.imul" [@@bs.val]
 
 .. note::
 
@@ -49,7 +49,7 @@ Example
    JavaScript functions, you can give the JavaScript foreign function a
    different name:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
    external imul : int -> int -> int = "c_imul" [@@bs.val "Math.imul"]
 
@@ -57,52 +57,90 @@ Example
 
 This attribute is used to create a JavaScript object. Example:
 
-``ocaml   external create_date : unit -> t = "Date" [@@bs.new]   let date = create_date ()``
-will be compiled as ``js   var date = new Date();``
+.. code-block:: ocaml
+
+   external create_date : unit -> t = "Date" [@@bs.new]
+   let date = create_date ()``
+
+
+will be compiled as 
+
+.. code-block:: js
+
+   var date = new Date();
 
 -  ``bs.val``
 
 This attribute is used to bind to a JavaScript value
 
-\`\`\`OCaml type dom (\* Abstract type for the DOM \*)
+.. code-block:: ocaml
 
-external dom : dom = "document" [@@bs.val] \`\`\`
+   type dom (* Abstract type for the DOM *)
+   external dom : dom = "document" [@@bs.val] 
 
 -  ``bs.send``
 
 This attribute helps the user send a message to a JS object
 
-``OCaml   type id      (** Abstract type for id object *)   external get_by_id : dom -> string -> id = "getElementById" [@@bs.send]``
+.. code-block:: ocaml
+
+   type id      (** Abstract type for id object *)   
+   external get_by_id : dom -> string -> id = "getElementById" [@@bs.send]
 
 The object is always the first argument and actual arguments follow.
 
-``OCaml   getElementById dom "xx"`` will be compiled as
-``js   dom.getElementById("xx")``
+``getElementById dom "xx"`` will be compiled as ``dom.getElementById("xx")``
 
--  ``bs.get``, ``bs.set`` This attribute helps get and set the property
-   of a JavaScript object.
+-  ``bs.get``, ``bs.set`` 
 
-``OCaml   type textarea   external set_name : textarea -> string -> unit = "name" [@@bs.set]   external get_name : textarea -> string = "name" [@@bs.get]``
+These attributes help ``get`` and ``set`` the property of a JavaScript object.
+
+.. code-block:: OCaml
+
+   type textarea   
+   external set_name : textarea -> string -> unit = "name" [@@bs.set]   
+   external get_name : textarea -> string = "name" [@@bs.get]
 
 -  ``bs.set_index`` ``bs.get_index``
 
-This attribute allows dynamic access to a JavaScript property
+These attributes allows dynamic access to a JavaScript property
 
-``OCaml   module Int32Array = struct     type t     external create : int -> t = "Int32Array" [@@bs.new]     external get : t -> int -> int = "" [@@bs.get_index]     external set : t -> int -> int -> unit = "" [@@bs.set_index]   end``
+.. code-block:: OCaml 
+
+   module Int32Array = struct
+      type t
+      external create : int -> t = "Int32Array" [@@bs.new]
+      external get : t -> int -> int = "" [@@bs.get_index]
+      external set : t -> int -> int -> unit = "" [@@bs.set_index]
+   end
 
 -  ``bs.module``
 
 Qualify the JavaScript value by a module name
 
-``OCaml    external add : int -> int -> int = "add" [@@bs.val] [@@bs.module "x"]    let f = add 3 4``
-will be compiled as
+.. code-block:: OCaml    
 
-``js    var X = require("x")    var f = X.add(3,4)``
+   external add : int -> int -> int = "add" [@@bs.val] [@@bs.module "x"]
+   let f = add 3 4
 
-``OCaml    external add : int -> int -> int = "add" [@@bs.val] [@@bs.module "x" "U"]    let f = add 3 4``
 Will be compiled as
 
-``js    var U = require("x")    var f = U.add(3,4)``
+.. code-block:: js
+
+   var X = require("x")    
+   var f = X.add(3,4)
+
+.. code-block:: OCaml
+
+   external add : int -> int -> int = "add" [@@bs.val] [@@bs.module   "x" "U"]    
+   let f = add 3 4
+
+Will be compiled as
+
+.. code-block:: js
+
+   var U = require("x")
+   var f = U.add(3,4)``
 
 FFI to high-order JS functions
 ------------------------------
@@ -110,7 +148,7 @@ FFI to high-order JS functions
 High order functions are functions where the callback can be another
 function. For example, suppose JS has a map function as below:
 
-.. code:: js
+.. code-block:: js
 
     function map (a, b, f){
       var i = Math.min(a.length, b.length);
@@ -123,18 +161,18 @@ function. For example, suppose JS has a map function as below:
 
 A naive external type declaration would be as below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     external map : 'a array -> 'b array -> ('a -> 'b -> 'c) -> 'c array = "map" [@@bs.val]
 
 Unfortunately, this is not completely correct. The issue is by reading
 the type ``'a -> 'b -> 'c``, it can be in several cases:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f x y = x + y
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let g x  = let z  = x + 1 in fun y -> x + z 
 
@@ -143,7 +181,7 @@ compiled into functions with different arities.
 
 A naive compilation will compile ``f`` as below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f = fun x -> fun y -> x + y
 
@@ -179,7 +217,7 @@ guarantee a function of type ``'a -> 'b -> 'c`` will have arity 2.**
 To solve this problem introduced by OCaml's curried calling convention,
 we support a special attribute ``[@bs]`` at the type level.
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     external map : 'a array -> 'b array -> ('a -> 'b -> 'c [@bs]) -> 'c array
     = "map" [@@bs.val]
@@ -192,14 +230,14 @@ be ``N`` while the latter is unknown.
 To produce a function of type ``'a0 -> .. 'aN -> 'b0 [@bs]``, as
 follows:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f : 'a0 -> 'a1 -> .. 'b0 [@bs] = fun [@bs] a0 a1 .. aN -> b0 
     let b : 'b0 = f a0 a1 a2 .. aN [@bs] 
 
 A special case for arity of 0:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f : unit -> 'b0 [@bs] = fun [@bs] () -> b0 
     let b : 'b0 = f () [@bs]
@@ -210,7 +248,7 @@ complain.
 
 Another more complex example:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     type 'a return = int -> 'a [@bs]
     type 'a u0 = int -> string -> 'a return  [@bs]
@@ -236,7 +274,7 @@ support OCaml's curried calling convention.
 This model is simple and easy to implement, but the native compilation
 is very slow and expensive for all functions.
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f x y z = x + y + z
     let a = f 1 2 3 
@@ -277,7 +315,7 @@ i.e, callbacks.
 
 For example,
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let app f x = f x
 
@@ -296,7 +334,7 @@ convention.
 Since we support the uncurried calling convention, you can write ``app``
 as below
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let app f x = f x [@bs]
 
@@ -331,7 +369,7 @@ Here, ``this`` would be the same as ``x`` (actually depends on how
 ``x.onload`` of type ``unit -> unit [@bs]``. Instead, we introduced a
 special attribute ``bs.this`` allowing us to type ``x`` as below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     type x 
     external onload : x -> (x -> int -> unit [@bs.this]) -> unit = "onload" [@@bs.set]
@@ -353,7 +391,7 @@ The generated code would be as below:
 reserved for ``this`` and for arity of 0, there is no need for a
 redundant ``unit`` type:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f : 'obj -> unit [@bs.this] = fun [@bs.this] obj -> ....
     let f1 : 'obj -> 'a0 -> 'b [@bs.this] = fun [@bs.this] obj a -> ...
@@ -382,7 +420,7 @@ Create simple JS object literal and its typing
 
 BuckleScript introduces ``bs.obj`` extension, for example:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let u = [%bs.obj { x = { y = { z = 3}}} ]
 
@@ -394,26 +432,26 @@ Would be compiled as
 
 The compiler would infer ``u`` as type
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     val u : < x :  < y : < z : int > Js.t >  Js.t > Js.t
 
 To make it more symmetric, we also apply the extension ``bs.obj`` into
 the type level, so you can write
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     val u : [%bs.obj: < x : < y < z : int > > > ]
 
 Users can also write expressione and types together as below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let u = [%bs.obj ( { x = { y = { z = 3 }}} : < x : < y : < z : int > > > ]
 
 Even better, users can also write Objects in a collection:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     var xs = [%bs.obj [| { x = 3 } ; {x = 3 } |] : < x : int  > array  ]
     var ys = [%bs.obj [| { x = 3} : { x = 4 } |] ]
@@ -441,7 +479,7 @@ will be compiled as
 
 You can use optional as well
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     external make_config : hi:int -> ?lo:int -> unit -> t = "" [@@bs.obj]
     let u = make_config ~hi:3 ()
@@ -460,7 +498,7 @@ Field access
 As we said ``##`` is used in both object method dispatch and field
 access.
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     f##field (* field access should not come with any argument *)
     f##method args0 args1 args2 (* method with arities of 3 *)
@@ -476,7 +514,7 @@ JS's **method is not a function** is a classic example shown below:
 So to make it clearly type safe, ``field`` accesses should not come with
 any argument.
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let fn = f##field in
     let a = fn a b 
@@ -492,7 +530,7 @@ style methods.
 
 Another example:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let u = [%bs.obj {x = { y = { z = 3 }}; fn = fun [@bs] u v -> u + v } ]
     let h = u##x##y##z
@@ -511,7 +549,7 @@ will be compiled as below:
 When the field is an uncurried function, there is a short-hand syntax as
 below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let b x y h = h#@fn x y
 
@@ -525,7 +563,7 @@ Will be compiled as
 
 And the compiler will infer the type of ``b`` as
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     val b : 'a -> 'b -> [%bs.obj: < fn :  'a -> 'b -> 'c [@bs] ] -> 'c
 
@@ -540,7 +578,7 @@ Class type declarations
 
 Below is an example:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     class type _rect = object
       method height : int [@@bs.set]
@@ -561,7 +599,7 @@ Annotation to JS properties
 
 There are various getter/setter decorations as below:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     class type _y = object 
       method height : int [@@bs.set {no_get}]
@@ -594,7 +632,7 @@ Consume JS class API
 
 For example,
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let f (u : rect) =   
       (* the type annotation is un-necessary,
@@ -621,7 +659,7 @@ Would be compiled as below:
 Note the type system would guarantee that the user can not write such
 code:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let v = u##draw 
     (* use v later -- this is not allowed, type system will complain *)
@@ -631,7 +669,7 @@ This is more type safe than JavaScript's **method is not function**.
 Method chaining
 ~~~~~~~~~~~~~~~
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     f
     ##(meth0 ())
@@ -647,7 +685,7 @@ it's necessary to get the job done.
 
 -  Embedding raw JS code as an expression
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     let keys : t -> string array [@bs] = [%bs.raw "Object.keys" ]
     let unsafe_lt : 'a -> 'a -> Js.boolean [@bs] = [%bs.raw{|function(x,y){return x < y}|}]
@@ -657,7 +695,7 @@ to refer to external OCaml symbols in raw JS code.
 
 -  Embedding raw JS code as statements
 
-.. code:: ocaml
+.. code-block:: ocaml
 
     [%%bs.raw{|
     console.log ("hey");
@@ -695,7 +733,7 @@ Debugger support
 
 We introduced the extension ``bs.debugger``, for example:
 
-.. code:: ocaml
+.. code-block:: ocaml
 
       let f x y = 
         [%bs.debugger];
@@ -703,7 +741,7 @@ We introduced the extension ``bs.debugger``, for example:
 
 which will be compiled into:
 
-.. code:: js
+.. code-block:: js
 
       function f (x,y) {
          debugger; // JavaScript developer tools will set an breakpoint and stop here
@@ -722,12 +760,14 @@ We introduced ``bs.re`` for Javascript regex expresion:
 The compiler will infer ``f`` has type ``Js_re.t`` and generate code as
 below
 
-::
+.. code-block:: js
 
     var f = /b/g
 
-    Note that ``Js_re.t`` is an abstract type, we are working on
-    providing bindings for it
+.. note::    
+
+   ``Js_re.t`` is an abstract type, we are working on
+   providing bindings for it
 
 Examples:
 ---------
